@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tpl.ssm.anno.dao.TestDAO">
+
+    <!-- 基础查询 sql 片段 -->
+    <sql id="baseSelect">
+        SELECT id, name
+    </sql>
+
+    <!-- 基础查询 where 片段 -->
+    <sql id="baseWhere">
+        <if test="id != null">
+            AND id = #{id}
+        </if>
+        <if test="name != null and name != ''">
+            AND name like CONCAT('%', #{name})
+        </if>
+    </sql>
+
+    <!-- 查询测试记录列表 -->
+    <select id="listTests" parameterType="com.tpl.ssm.anno.entity.TestEntity" resultType="com.tpl.ssm.anno.entity.TestEntity">
+        <include refid="baseSelect"/>
+        FROM `ssm-tpl-cfg`
+        WHERE
+        1 = 1
+        <include refid="baseWhere"/>
+    </select>
+
+    <!-- 查询单个测试记录 -->
+    <select id="singleTest" parameterType="com.tpl.ssm.anno.entity.TestEntity" resultType="com.tpl.ssm.anno.entity.TestEntity">
+        <include refid="baseSelect"/>
+        FROM `ssm-tpl-cfg`
+        WHERE
+        1 = 1
+        <include refid="baseWhere"/>
+        limit 1
+    </select>
+
+    <!-- 新增测试记录 -->
+    <insert id="insertTest" parameterType="com.tpl.ssm.anno.entity.TestEntity">
+        INSERT INTO `ssm-tpl-cfg`(id, name)
+        VALUES (#{id}, #{name})
+    </insert>
+
+    <!-- 修改测试记录 -->
+    <update id="updateTest" parameterType="com.tpl.ssm.anno.entity.TestEntity">
+        UPDATE `ssm-tpl-cfg`
+        SET
+        <if test="name != null and name != ''">
+            name = #{name}
+        </if>
+        WHERE id = #{id}
+    </update>
+
+    <!-- 删除测试记录 -->
+    <delete id="deleteTest" parameterType="com.tpl.ssm.anno.entity.TestEntity">
+        DELETE
+        FROM `ssm-tpl-cfg`
+        WHERE 1 = 1
+        <include refid="baseWhere"/>
+    </delete>
+
+    <!-- 根据主键集删除测试记录 -->
+    <delete id="deleteTests" parameterType="long">
+        DELETE
+        FROM `ssm-tpl-cfg`
+        WHERE id in
+        <foreach collection="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </delete>
+</mapper>
